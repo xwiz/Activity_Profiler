@@ -31,7 +31,7 @@ namespace ActivityProfiler
             {
                 bool edited = false;
                 //skip generated files
-                if(f.Contains("obj\\") || f.Contains("Properties\\"))
+                if (f.Contains("obj\\") || f.Contains("Properties\\"))
                 {
                     continue;
                 }
@@ -39,36 +39,38 @@ namespace ActivityProfiler
                 StringBuilder finalText = new StringBuilder(originalText);
                 var col = Regex.Matches(originalText, "^.*\\s(\\S*?_+)Click(.*?)\\(", RegexOptions.Multiline);
                 int insertLength = 0;
-                for(int i = 0; i < col.Count; i++)
+                for (int i = 0; i < col.Count; i++)
                 {
-                    if(col[i].Groups.Count < 3)
+                    if (col[i].Groups.Count < 3)
                     {
                         //should be impossible but JIC
                         continue;
                     }
                     string methodName = col[i].Groups[1].Value + "Click" + col[i].Groups[2].Value;
-                    if(methodName.Contains("=") || methodName.Contains(" "))
+                    if (methodName.Contains("=") || methodName.Contains(" "))
                     {
                         //invalid method, skip
                         continue;
                     }
-                    int classIndex = originalText.LastIndexOf("class", col[i].Index) + 1;
+                    int classIndex = originalText.LastIndexOf("class", col[i].Index, StringComparison.Ordinal) + 1;
                     //we can use { or space to find classIndex, maybe do all this with regex in future
                     int classIndex1 = originalText.IndexOf(' ', classIndex + 6);
                     int classBrace = originalText.IndexOf('{', classIndex + 6);
                     //determine better index to use
                     int finalIndex = classIndex1 > classBrace ? classBrace : classIndex1;
                     string className = originalText.Substring(classIndex + 5, finalIndex - classIndex - 5).TrimEnd('\r', '\n', ' ', '\t');
-
                     int braceIndex = originalText.IndexOf('{', col[i].Index);
-                    string insert = string.Format("{0}\t\tActivityProfiler.Clicks.Log(\"{1}.{2}\");", Environment.NewLine, className, methodName);
+                    int[] prepend = getInsertPrepend(originalText, braceIndex + 1);
+                    int closeIndex = originalText.IndexOf('{', braceIndex + 1);
+                    string insert = string.Format("{0}{3}ActivityProfiler.Clicks.Log(\"{1}.{2}\");", Environment.NewLine, className, methodName,
+                        new string(' ', prepend[1] - prepend[0] - prepend[2]));
                     //account for inserted text in next insert
-                    finalText.Insert(braceIndex + 1 + insertLength, insert);
+                    finalText.Insert(prepend[0] + insertLength, insert);
                     insertLength += insert.Length;
                     edited = true;
 
                     //determine if we're still in same namespace
-                    int nameIndex = originalText.LastIndexOf("namespace", classIndex) + 1;
+                    int nameIndex = originalText.LastIndexOf("namespace", classIndex, StringComparison.Ordinal) + 1;
                     int nameIndex1 = originalText.IndexOf('{', nameIndex + 10);
                     string nspace = originalText.Substring(nameIndex + 9, nameIndex1 - nameIndex - 9).TrimEnd('\r', '\n', ' ', '\t');
 
@@ -134,12 +136,35 @@ namespace ActivityProfiler
                 {
                     if (!File.Exists(f + ".backup"))
                     {
-
                         File.Move(f, f + ".backup");
                         File.WriteAllText(f, finalText.ToString());
                     }
                 }
             }
         }
+
+        //quick/dirty helper method to help get amount of space to give before insertion
+        public static int[] getInsertPrepend(string s, int startIndex)
+        {
+            int[] result = { -1, -1, 0 };
+            for (int i = startIndex; i < s.Length; i++)
+            {
+                if (Char.IsWhiteSpace(s[i]))
+                {
+                    for (int j = i; j < s.Length; j++)
+                    {
+                        if (!Char.IsWhiteSpace(s[j]))
+                        {
+                            result[0] = i;
+                            result[1] = j;
+                            //correct strange quirk with indexing on empty methods
+                            result[2] = Char.IsLetter(s[j]) ? 2 : 0;
+                            return result;
+                        }
+                    }
+                }
+            }
+            return result;
+        }        
     }
 }
