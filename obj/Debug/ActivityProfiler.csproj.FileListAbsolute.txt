@@ -1,0 +1,6 @@
+C:\Users\xwizard\Documents\Visual Studio 2012\Projects\Drake\ActivityProfiler\bin\Debug\ActivityProfiler.exe.config
+C:\Users\xwizard\Documents\Visual Studio 2012\Projects\Drake\ActivityProfiler\bin\Debug\ActivityProfiler.exe
+C:\Users\xwizard\Documents\Visual Studio 2012\Projects\Drake\ActivityProfiler\bin\Debug\ActivityProfiler.pdb
+C:\Users\xwizard\Documents\Visual Studio 2012\Projects\Drake\ActivityProfiler\obj\Debug\ActivityProfiler.csprojResolveAssemblyReference.cache
+C:\Users\xwizard\Documents\Visual Studio 2012\Projects\Drake\ActivityProfiler\obj\Debug\ActivityProfiler.exe
+C:\Users\xwizard\Documents\Visual Studio 2012\Projects\Drake\ActivityProfiler\obj\Debug\ActivityProfiler.pdb

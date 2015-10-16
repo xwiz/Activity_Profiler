@@ -1,0 +1,5 @@
+C:\Users\xwizard\Documents\Visual Studio 2012\Projects\Drake\ActivityProfiler\bin\Release\ActivityProfiler.exe.config
+C:\Users\xwizard\Documents\Visual Studio 2012\Projects\Drake\ActivityProfiler\bin\Release\ActivityProfiler.exe
+C:\Users\xwizard\Documents\Visual Studio 2012\Projects\Drake\ActivityProfiler\bin\Release\ActivityProfiler.pdb
+C:\Users\xwizard\Documents\Visual Studio 2012\Projects\Drake\ActivityProfiler\obj\Release\ActivityProfiler.exe
+C:\Users\xwizard\Documents\Visual Studio 2012\Projects\Drake\ActivityProfiler\obj\Release\ActivityProfiler.pdb
